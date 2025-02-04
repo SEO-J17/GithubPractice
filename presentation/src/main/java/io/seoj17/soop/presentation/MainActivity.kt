@@ -1,4 +1,4 @@
-package io.seoj17.soop
+package io.seoj17.soop.presentation
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
