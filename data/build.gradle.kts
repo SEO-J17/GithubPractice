@@ -8,7 +8,6 @@ android {
 }
 
 dependencies {
-    implementation(project(":domain"))
     implementation(libs.bundles.coroutine)
     implementation(libs.bundles.network)
 }
