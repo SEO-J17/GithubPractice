@@ -1,11 +1,13 @@
 plugins {
-    id("kotlin")
-    alias(libs.plugins.seoj17.jvm.library)
-    alias(libs.plugins.ksp)
+    alias(libs.plugins.seoj17.android.library)
+    alias(libs.plugins.seoj17.hilt)
 }
 
-dependencies{
-    implementation(libs.coroutine.core)
-    implementation(libs.hilt.core)
-    ksp(libs.hilt.compiler)
+android {
+    namespace = "io.seoj17.soop.domain"
+}
+
+dependencies {
+    implementation(project(":data"))
+    implementation(libs.bundles.coroutine)
 }
