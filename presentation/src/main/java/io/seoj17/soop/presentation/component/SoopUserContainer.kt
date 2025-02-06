@@ -12,11 +12,17 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 
 @Composable
-fun SoopUserContainer(modifier: Modifier, userThumbnailUrl: String, userName: String) {
+fun SoopUserContainer(
+    modifier: Modifier,
+    userThumbnailUrl: String,
+    userName: String,
+    thumbnailSize: Dp = 30.dp,
+) {
     Row(
         modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(10.dp),
@@ -25,7 +31,7 @@ fun SoopUserContainer(modifier: Modifier, userThumbnailUrl: String, userName: St
         AsyncImage(
             modifier = Modifier
                 .clip(shape = CircleShape)
-                .size(30.dp),
+                .size(thumbnailSize),
             model = userThumbnailUrl,
             contentScale = ContentScale.Fit,
             contentDescription = "유저 썸네일",
