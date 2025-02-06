@@ -8,4 +8,11 @@ plugins {
     alias(libs.plugins.hilt) apply false
     alias(libs.plugins.ksp) apply false
     alias(libs.plugins.kotlinx.serialization) apply false
+    alias(libs.plugins.ktlint)
+}
+
+subprojects {
+    apply {
+        plugin(rootProject.libs.plugins.ktlint.get().pluginId)
+    }
 }
