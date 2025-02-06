@@ -22,7 +22,7 @@ fun SearchTextField(
     modifier: Modifier,
     textFieldState: TextFieldState,
     textHint: String = "",
-    keyboardType: KeyboardType = KeyboardType.Text,
+    keyboardType: KeyboardType = KeyboardType.Text
 ) {
     BasicTextField(
         modifier = modifier,
@@ -31,7 +31,7 @@ fun SearchTextField(
         keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
         onKeyboardAction = { /*완료버튼을 눌렀을때 실행할 함수*/ },
         cursorBrush = Brush.linearGradient(
-            colors = listOf(Color.Black, Color.Transparent),
+            colors = listOf(Color.Black, Color.Transparent)
         ),
         decorator = { innerTextField ->
             Box(
@@ -44,17 +44,17 @@ fun SearchTextField(
                             strokeWidth = 1.dp.toPx()
                         )
                     }
-                    .padding(vertical = 15.dp, horizontal = 20.dp),
+                    .padding(vertical = 15.dp, horizontal = 20.dp)
             ) {
                 if (textFieldState.text.isEmpty()) {
                     Text(
                         text = textHint,
                         textAlign = TextAlign.Center,
-                        color = Color.LightGray,
+                        color = Color.LightGray
                     )
                 }
                 innerTextField()
             }
-        },
+        }
     )
 }

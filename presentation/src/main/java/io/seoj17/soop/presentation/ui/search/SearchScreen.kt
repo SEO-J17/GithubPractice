@@ -104,7 +104,7 @@ private fun SearchContainer(modifier: Modifier, onClickSearch: (String) -> Unit)
                 .size(30.dp)
                 .weight(1f),
             imageVector = Icons.Default.Search,
-            contentDescription = "검색",
+            contentDescription = "검색"
         )
     }
 }

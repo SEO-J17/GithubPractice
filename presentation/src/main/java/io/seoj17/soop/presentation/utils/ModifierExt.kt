@@ -15,14 +15,14 @@ import kotlinx.coroutines.launch
 
 fun Modifier.rippleSingleClick(
     delayMillis: Long = 1000L,
-    onClick: () -> Unit,
+    onClick: () -> Unit
 ): Modifier = composed {
     var isClickable by remember { mutableStateOf(true) }
     val coroutineScope = rememberCoroutineScope()
 
     clickable(
         indication = rememberRipple(),
-        interactionSource = remember { MutableInteractionSource() },
+        interactionSource = remember { MutableInteractionSource() }
     ) {
         if (isClickable) {
             onClick()
@@ -37,7 +37,7 @@ fun Modifier.rippleSingleClick(
 
 fun Modifier.noRippleSingleClick(
     delayMillis: Long = 1000L,
-    onClick: () -> Unit,
+    onClick: () -> Unit
 ): Modifier = composed {
     var isClickable by remember { mutableStateOf(true) }
     val coroutineScope = rememberCoroutineScope()
@@ -45,7 +45,7 @@ fun Modifier.noRippleSingleClick(
     clickable(
         indication = null,
         interactionSource = remember { MutableInteractionSource() },
-        enabled = isClickable,
+        enabled = isClickable
     ) {
         if (isClickable) {
             onClick()
@@ -59,22 +59,22 @@ fun Modifier.noRippleSingleClick(
 }
 
 fun Modifier.rippleClick(
-    onClick: () -> Unit,
+    onClick: () -> Unit
 ): Modifier = composed {
     clickable(
         indication = rememberRipple(),
-        interactionSource = remember { MutableInteractionSource() },
+        interactionSource = remember { MutableInteractionSource() }
     ) {
         onClick()
     }
 }
 
 fun Modifier.noRippleClick(
-    onClick: () -> Unit,
+    onClick: () -> Unit
 ): Modifier = composed {
     clickable(
         indication = null,
-        interactionSource = remember { MutableInteractionSource() },
+        interactionSource = remember { MutableInteractionSource() }
     ) {
         onClick()
     }
