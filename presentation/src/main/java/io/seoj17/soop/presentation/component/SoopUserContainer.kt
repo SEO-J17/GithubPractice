@@ -22,6 +22,7 @@ fun SoopUserContainer(
     userThumbnailUrl: String,
     userName: String,
     thumbnailSize: Dp = 30.dp,
+    nameColor: Color = Color.Gray,
 ) {
     Row(
         modifier = modifier,
@@ -38,7 +39,7 @@ fun SoopUserContainer(
         )
         Text(
             text = userName,
-            color = Color.Gray,
+            color = nameColor,
         )
     }
 }

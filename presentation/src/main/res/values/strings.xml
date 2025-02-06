@@ -5,4 +5,9 @@
     <string name="detail_fork_title">Forks</string>
     <string name="detail_more_label">more</string>
     <string name="detail_description_title">Description</string>
+    <string name="sheet_followers_label">Followers</string>
+    <string name="sheet_following_label">Following</string>
+    <string name="sheet_language_label">Language</string>
+    <string name="sheet_repositories_label">Repositories</string>
+    <string name="sheet_bio_label">Bio</string>
 </resources>

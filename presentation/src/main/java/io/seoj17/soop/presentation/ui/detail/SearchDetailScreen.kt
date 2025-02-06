@@ -9,7 +9,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,15 +30,29 @@ import io.seoj17.soop.presentation.component.SoopTextBadge
 import io.seoj17.soop.presentation.component.SoopUserContainer
 import io.seoj17.soop.presentation.utils.rippleClick
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchDetailScreen(
     repoName: String,
     repoLanguage: String,
     userName: String,
     onClickUserDetail: () -> Unit,
+    isBottomSheetVisible: Boolean,
 ) {
+    val sheetState = rememberModalBottomSheetState(
+        skipPartiallyExpanded = true,
+    )
+
+    if (isBottomSheetVisible) {
+        UserInfoBottomSheet(
+            modifier = Modifier.wrapContentSize(),
+            sheetState = sheetState,
+        )
+    }
+
     Column(
         modifier = Modifier
+            .background(Color.White)
             .fillMaxSize()
             .padding(horizontal = 10.dp),
     ) {
@@ -68,7 +86,10 @@ fun SearchDetailScreen(
                 .padding(vertical = 20.dp)
                 .fillMaxWidth(),
         )
-        UserInfoContainer(modifier = Modifier.fillMaxWidth(), onClickUserDetail = onClickUserDetail)
+        UserInfoContainer(
+            modifier = Modifier.fillMaxWidth(),
+            onClickUserDetail = onClickUserDetail,
+        )
         SoopHorizontalDivider(
             modifier = Modifier
                 .padding(vertical = 20.dp)
@@ -179,6 +200,61 @@ private fun RepoAttribute(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun UserInfoBottomSheet(modifier: Modifier, sheetState: SheetState) {
+    ModalBottomSheet(
+        modifier = modifier,
+        onDismissRequest = { },
+        sheetState = sheetState,
+        dragHandle = null,
+        containerColor = Color.White,
+    ) {
+        BottomSheetContainer(
+            modifier = Modifier
+                .padding(20.dp)
+                .wrapContentSize(),
+        )
+    }
+}
+
+@Composable
+private fun BottomSheetContainer(modifier: Modifier) {
+    // TODO: Replace with real data
+    val userInfoList = listOf(
+        Pair(R.string.sheet_followers_label, "100"),
+        Pair(R.string.sheet_following_label, "100"),
+        Pair(R.string.sheet_language_label, "100"),
+        Pair(R.string.sheet_repositories_label, "Kotlin"),
+        Pair(R.string.sheet_bio_label, "soop"),
+    )
+
+    Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(20.dp)) {
+        SoopUserContainer(
+            modifier = Modifier,
+            userName = "seoj17",
+            userThumbnailUrl = "https://avatars.githubusercontent.com/u/48755115?v=4",
+            thumbnailSize = 40.dp,
+            nameColor = Color.Black,
+        )
+        userInfoList.forEach { (titleResId, content) ->
+            UserInfoContent(
+                modifier = Modifier,
+                titleResId = titleResId,
+                content = content,
+            )
+        }
+    }
+}
+
+@Composable
+private fun UserInfoContent(modifier: Modifier, titleResId: Int, content: String) {
+    Row(modifier = modifier, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+        Text(text = stringResource(titleResId), color = Color.Black)
+        Text(text = content, color = Color.Gray)
+    }
+}
+
 @Composable
 @Preview
 private fun SearchDetailScreenPreview() {
@@ -187,5 +263,6 @@ private fun SearchDetailScreenPreview() {
         repoLanguage = "Kotlin",
         userName = "seoj17",
         onClickUserDetail = {},
+        isBottomSheetVisible = true,
     )
 }
