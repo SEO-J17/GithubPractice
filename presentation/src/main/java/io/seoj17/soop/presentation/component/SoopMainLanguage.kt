@@ -20,17 +20,17 @@ fun SoopMainLanguage(modifier: Modifier, text: String) {
     Row(
         modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(5.dp),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Box(
             modifier = Modifier
                 .size(13.dp)
                 .clip(CircleShape)
-                .background(Color.Gray)
+                .background(Color.Gray),
         )
         Text(
             text = text,
-            color = Color.LightGray
+            color = Color.LightGray,
         )
     }
 }
@@ -40,6 +40,6 @@ fun SoopMainLanguage(modifier: Modifier, text: String) {
 private fun SoopMainLanguagePreview() {
     SoopMainLanguage(
         text = "Kotlin",
-        modifier = Modifier
+        modifier = Modifier,
     )
 }

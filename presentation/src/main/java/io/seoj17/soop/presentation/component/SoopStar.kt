@@ -19,17 +19,17 @@ fun SoopStar(modifier: Modifier, text: String) {
     Row(
         modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(5.dp),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(
             modifier = Modifier.size(15.dp),
             imageVector = Icons.Default.Star,
             contentDescription = "star 개수",
-            tint = Color.Yellow
+            tint = Color.Yellow,
         )
         Text(
             text = text,
-            color = Color.LightGray
+            color = Color.LightGray,
         )
     }
 }
@@ -39,6 +39,6 @@ fun SoopStar(modifier: Modifier, text: String) {
 private fun SoopStarPreview() {
     SoopStar(
         modifier = Modifier,
-        text = "12.5k"
+        text = "12.5k",
     )
 }
