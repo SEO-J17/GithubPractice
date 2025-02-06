@@ -6,9 +6,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -23,7 +20,7 @@ fun SoopMainLanguage(modifier: Modifier, text: String) {
     Row(
         modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(5.dp),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Box(
             modifier = Modifier
@@ -33,7 +30,7 @@ fun SoopMainLanguage(modifier: Modifier, text: String) {
         )
         Text(
             text = text,
-            color = Color.LightGray
+            color = Color.LightGray,
         )
     }
 }
@@ -43,6 +40,6 @@ fun SoopMainLanguage(modifier: Modifier, text: String) {
 private fun SoopMainLanguagePreview() {
     SoopMainLanguage(
         text = "Kotlin",
-        modifier = Modifier
+        modifier = Modifier,
     )
 }

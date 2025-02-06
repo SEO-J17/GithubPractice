@@ -41,7 +41,7 @@ fun SearchTextField(
                             color = Color.Black,
                             start = Offset(0f, size.height),
                             end = Offset(size.width, size.height),
-                            strokeWidth = 1.dp.toPx()
+                            strokeWidth = 1.dp.toPx(),
                         )
                     }
                     .padding(vertical = 15.dp, horizontal = 20.dp),

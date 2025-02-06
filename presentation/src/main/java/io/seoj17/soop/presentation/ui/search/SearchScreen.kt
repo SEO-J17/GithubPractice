@@ -34,7 +34,7 @@ fun SearchScreen(onClickSearch: (String) -> Unit, repoList: ImmutableList<Any>) 
     Column(modifier = Modifier.fillMaxSize()) {
         SearchContainer(
             modifier = Modifier.fillMaxWidth(),
-            onClickSearch = onClickSearch
+            onClickSearch = onClickSearch,
         )
         SearchResultContainer(modifier = Modifier.fillMaxSize(), repoList = repoList)
     }
@@ -51,9 +51,9 @@ private fun SearchResultContainer(modifier: Modifier, repoList: ImmutableList<An
                         start = 20.dp,
                         end = 20.dp,
                         top = if (index == 0) 20.dp else 13.dp,
-                        bottom = if (index == repoList.lastIndex) 20.dp else 0.dp
+                        bottom = if (index == repoList.lastIndex) 20.dp else 0.dp,
                     ),
-                repoInfo = item
+                repoInfo = item,
             )
             if (index != repoList.lastIndex) {
                 HorizontalDivider(
@@ -61,7 +61,7 @@ private fun SearchResultContainer(modifier: Modifier, repoList: ImmutableList<An
                         .padding(top = 13.dp)
                         .fillMaxWidth(),
                     color = Color.LightGray,
-                    thickness = 1.dp
+                    thickness = 1.dp,
                 )
             }
         }
@@ -75,7 +75,7 @@ private fun RepoInfoItem(modifier: Modifier, repoInfo: Any) {
         SoopUserContainer(
             modifier = Modifier.wrapContentSize(),
             userThumbnailUrl = "https://avatars.githubusercontent.com/u/1?v=4",
-            userName = "seoj17"
+            userName = "seoj17",
         )
         Text(modifier = Modifier.padding(top = 5.dp), text = "RepoName")
         Text(modifier = Modifier.padding(top = 10.dp), text = "RepoDescription")
@@ -83,7 +83,7 @@ private fun RepoInfoItem(modifier: Modifier, repoInfo: Any) {
             modifier = Modifier
                 .wrapContentSize()
                 .padding(top = 10.dp),
-            repoProperty = repoInfo
+            repoProperty = repoInfo,
         )
     }
 }
@@ -96,7 +96,7 @@ private fun SearchContainer(modifier: Modifier, onClickSearch: (String) -> Unit)
         SearchTextField(
             modifier = Modifier.weight(9f),
             textFieldState = searchTextState,
-            textHint = "검색어를 입력해주세요"
+            textHint = "검색어를 입력해주세요",
         )
         Icon(
             modifier = Modifier
@@ -114,15 +114,15 @@ private fun RepoPropertyContainer(modifier: Modifier, repoProperty: Any) {
     Row(
         modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(15.dp),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         SoopStar(
             modifier = Modifier.wrapContentSize(),
-            text = "14.5k"
+            text = "14.5k",
         )
         SoopMainLanguage(
             modifier = Modifier.wrapContentSize(),
-            text = "Kotlin"
+            text = "Kotlin",
         )
     }
 }
@@ -145,8 +145,8 @@ private fun SearchScreenPreview() {
                 Any(),
                 Any(),
                 Any(),
-                Any()
-            )
-        )
+                Any(),
+            ),
+        ),
     )
 }

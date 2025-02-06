@@ -20,7 +20,7 @@ fun SoopUserContainer(modifier: Modifier, userThumbnailUrl: String, userName: St
     Row(
         modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(10.dp),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         AsyncImage(
             modifier = Modifier
@@ -28,11 +28,11 @@ fun SoopUserContainer(modifier: Modifier, userThumbnailUrl: String, userName: St
                 .size(30.dp),
             model = userThumbnailUrl,
             contentScale = ContentScale.Fit,
-            contentDescription = "유저 썸네일"
+            contentDescription = "유저 썸네일",
         )
         Text(
             text = userName,
-            color = Color.Gray
+            color = Color.Gray,
         )
     }
 }
@@ -43,6 +43,6 @@ private fun SoopUserContainerPreview() {
     SoopUserContainer(
         modifier = Modifier,
         userThumbnailUrl = "https://avatars.githubusercontent.com/u/48726953?v=4",
-        userName = "seoj17"
+        userName = "seoj17",
     )
 }

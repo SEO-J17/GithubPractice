@@ -1,11 +1,8 @@
 package io.seoj17.soop.presentation.component
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Icon
@@ -22,17 +19,17 @@ fun SoopStar(modifier: Modifier, text: String) {
     Row(
         modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(5.dp),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(
             modifier = Modifier.size(15.dp),
             imageVector = Icons.Default.Star,
             contentDescription = "star 개수",
-            tint = Color.Yellow
+            tint = Color.Yellow,
         )
         Text(
             text = text,
-            color = Color.LightGray
+            color = Color.LightGray,
         )
     }
 }
