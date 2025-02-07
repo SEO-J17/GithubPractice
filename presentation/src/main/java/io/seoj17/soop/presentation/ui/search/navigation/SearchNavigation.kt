@@ -5,14 +5,14 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import io.seoj17.soop.presentation.navigation.SoopRoute
 
-fun NavController.navigateSearch() {
+fun NavController.navigateToSearch() {
     navigate(
         SoopRoute.Search.route,
     )
 }
 
-fun NavGraphBuilder.searchNavigation() {
+fun NavGraphBuilder.searchNavigation(onClickSearchResultItem: () -> Unit) {
     composable(route = SoopRoute.Search.route) {
-        SearchRoute()
+        SearchRoute(onClickSearchResultItem = onClickSearchResultItem)
     }
 }
