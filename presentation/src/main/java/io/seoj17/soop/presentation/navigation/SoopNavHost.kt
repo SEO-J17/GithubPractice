@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import io.seoj17.soop.presentation.ui.detail.naviagation.navigateToSearchDetail
 import io.seoj17.soop.presentation.ui.detail.naviagation.searchDetailNavigation
 import io.seoj17.soop.presentation.ui.search.navigation.searchNavigation
 
@@ -23,7 +24,11 @@ fun SoopNavHost(
         popExitTransition = { ExitTransition.None },
         popEnterTransition = { EnterTransition.None },
     ) {
-        searchNavigation()
+        searchNavigation(
+            onClickSearchResultItem = {
+                navController.navigateToSearchDetail()
+            },
+        )
         searchDetailNavigation()
     }
 }
