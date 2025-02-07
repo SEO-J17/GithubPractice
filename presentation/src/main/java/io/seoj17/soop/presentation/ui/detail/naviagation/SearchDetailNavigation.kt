@@ -5,7 +5,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import io.seoj17.soop.presentation.navigation.SoopRoute
 
-fun NavController.navigateSearchDetail() {
+fun NavController.navigateToSearchDetail() {
     navigate(
         SoopRoute.SearchDetail.route,
     )
