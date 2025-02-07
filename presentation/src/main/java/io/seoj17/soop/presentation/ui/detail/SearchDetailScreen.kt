@@ -36,8 +36,9 @@ fun SearchDetailScreen(
     repoName: String,
     repoLanguage: String,
     userName: String,
-    onClickUserDetail: () -> Unit,
     isBottomSheetVisible: Boolean,
+    onClickUserDetail: () -> Unit,
+    onTouchBottomSheetClose: () -> Unit,
 ) {
     val sheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = true,
@@ -47,6 +48,7 @@ fun SearchDetailScreen(
         UserInfoBottomSheet(
             modifier = Modifier.wrapContentSize(),
             sheetState = sheetState,
+            onTouchBottomSheetClose = onTouchBottomSheetClose,
         )
     }
 
@@ -202,10 +204,14 @@ private fun RepoAttribute(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun UserInfoBottomSheet(modifier: Modifier, sheetState: SheetState) {
+private fun UserInfoBottomSheet(
+    modifier: Modifier,
+    sheetState: SheetState,
+    onTouchBottomSheetClose: () -> Unit,
+) {
     ModalBottomSheet(
         modifier = modifier,
-        onDismissRequest = { },
+        onDismissRequest = { onTouchBottomSheetClose() },
         sheetState = sheetState,
         dragHandle = null,
         containerColor = Color.White,
@@ -262,7 +268,8 @@ private fun SearchDetailScreenPreview() {
         repoName = "soop",
         repoLanguage = "Kotlin",
         userName = "seoj17",
-        onClickUserDetail = {},
         isBottomSheetVisible = true,
+        onClickUserDetail = {},
+        onTouchBottomSheetClose = {},
     )
 }
