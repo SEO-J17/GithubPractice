@@ -27,26 +27,40 @@ import io.seoj17.soop.presentation.component.SoopStar
 import io.seoj17.soop.presentation.component.SoopUserContainer
 import io.seoj17.soop.presentation.ui.search.component.SearchTextField
 import io.seoj17.soop.presentation.utils.ImmutableList
+import io.seoj17.soop.presentation.utils.noRippleClick
 import io.seoj17.soop.presentation.utils.noRippleSingleClick
 
 @Composable
-fun SearchScreen(onClickSearch: (String) -> Unit, repoList: ImmutableList<Any>) {
+fun SearchScreen(
+    repoList: ImmutableList<Any>,
+    onClickSearch: (String) -> Unit,
+    onClickSearchResultItem: () -> Unit,
+) {
     Column(modifier = Modifier.fillMaxSize()) {
         SearchContainer(
             modifier = Modifier.fillMaxWidth(),
             onClickSearch = onClickSearch,
         )
-        SearchResultContainer(modifier = Modifier.fillMaxSize(), repoList = repoList)
+        SearchResultContainer(
+            modifier = Modifier.fillMaxSize(),
+            repoList = repoList,
+            onClickSearchResultItem = onClickSearchResultItem,
+        )
     }
 }
 
 @Composable
-private fun SearchResultContainer(modifier: Modifier, repoList: ImmutableList<Any>) {
+private fun SearchResultContainer(
+    modifier: Modifier,
+    repoList: ImmutableList<Any>,
+    onClickSearchResultItem: () -> Unit,
+) {
     LazyColumn(modifier = modifier) {
         itemsIndexed(repoList) { index, item ->
             RepoInfoItem(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .noRippleClick { onClickSearchResultItem() }
                     .padding(
                         start = 20.dp,
                         end = 20.dp,
@@ -148,5 +162,6 @@ private fun SearchScreenPreview() {
                 Any(),
             ),
         ),
+        onClickSearchResultItem = {},
     )
 }
