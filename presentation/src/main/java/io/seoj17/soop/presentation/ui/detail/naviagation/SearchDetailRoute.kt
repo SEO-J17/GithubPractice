@@ -15,11 +15,8 @@ fun SearchDetailRoute(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     SearchDetailScreen(
-        repoName = "",
-        repoLanguage = "",
-        userName = "",
-        onClickUserDetail = {},
-        isBottomSheetVisible = uiState.isBottomSheetVisible,
+        uiState = uiState,
+        onClickUserDetail = { viewModel.handleIntent(SearchDetailIntent.ClickMoreUserInfo) },
         onTouchBottomSheetClose = { viewModel.handleIntent(SearchDetailIntent.TouchBottomSheetClose) },
     )
 }
