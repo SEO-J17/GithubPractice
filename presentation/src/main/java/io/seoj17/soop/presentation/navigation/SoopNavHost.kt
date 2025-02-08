@@ -25,8 +25,8 @@ fun SoopNavHost(
         popEnterTransition = { EnterTransition.None },
     ) {
         searchNavigation(
-            onClickSearchResultItem = {
-                navController.navigateToSearchDetail()
+            onClickSearchResultItem = { userName, repoName ->
+                navController.navigateToSearchDetail(userName = userName, repoName = repoName)
             },
         )
         searchDetailNavigation()
