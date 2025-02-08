@@ -17,21 +17,23 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun SoopMainLanguage(modifier: Modifier, text: String) {
-    Row(
-        modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(5.dp),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Box(
-            modifier = Modifier
-                .size(13.dp)
-                .clip(CircleShape)
-                .background(Color.Gray),
-        )
-        Text(
-            text = text,
-            color = Color.LightGray,
-        )
+    if (text.isNotEmpty()) {
+        Row(
+            modifier = modifier,
+            horizontalArrangement = Arrangement.spacedBy(5.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(13.dp)
+                    .clip(CircleShape)
+                    .background(Color.Gray),
+            )
+            Text(
+                text = text,
+                color = Color.LightGray,
+            )
+        }
     }
 }
 
