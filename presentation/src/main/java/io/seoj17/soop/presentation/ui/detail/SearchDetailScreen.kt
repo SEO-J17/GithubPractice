@@ -26,31 +26,24 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import io.seoj17.soop.presentation.R
 import io.seoj17.soop.presentation.component.SoopHorizontalDivider
+import io.seoj17.soop.presentation.component.SoopLoadingCircular
 import io.seoj17.soop.presentation.component.SoopTextBadge
 import io.seoj17.soop.presentation.component.SoopUserContainer
+import io.seoj17.soop.presentation.ui.detail.model.UserDetail
+import io.seoj17.soop.presentation.ui.detail.mvi.SearchDetailUiState
+import io.seoj17.soop.presentation.utils.NumberFormater
 import io.seoj17.soop.presentation.utils.rippleClick
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchDetailScreen(
-    repoName: String,
-    repoLanguage: String,
-    userName: String,
-    isBottomSheetVisible: Boolean,
+    uiState: SearchDetailUiState,
     onClickUserDetail: () -> Unit,
     onTouchBottomSheetClose: () -> Unit,
 ) {
     val sheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = true,
     )
-
-    if (isBottomSheetVisible) {
-        UserInfoBottomSheet(
-            modifier = Modifier.wrapContentSize(),
-            sheetState = sheetState,
-            onTouchBottomSheetClose = onTouchBottomSheetClose,
-        )
-    }
 
     Column(
         modifier = Modifier
@@ -60,7 +53,7 @@ fun SearchDetailScreen(
     ) {
         Text(
             modifier = Modifier.padding(top = 20.dp),
-            text = repoName,
+            text = uiState.repoDetail.repoName,
             fontWeight = FontWeight.Bold,
             fontSize = 20.sp,
         )
@@ -68,9 +61,9 @@ fun SearchDetailScreen(
             modifier = Modifier
                 .wrapContentSize()
                 .padding(top = 10.dp),
-            repoName = repoName,
-            repoLanguage = repoLanguage,
-            userName = userName,
+            repoName = uiState.repoDetail.repoName,
+            repoLanguage = uiState.repoDetail.mainLanguage.orEmpty(),
+            userName = uiState.userDetail.userName,
         )
         SoopHorizontalDivider(
             modifier = Modifier
@@ -79,9 +72,9 @@ fun SearchDetailScreen(
         )
         RepoAttributesContainer(
             modifier = Modifier.fillMaxWidth(),
-            starCount = "100",
-            watcherCount = "100",
-            forkCount = "100",
+            starCount = uiState.repoDetail.starCount,
+            watcherCount = uiState.repoDetail.watcherCount,
+            forkCount = uiState.repoDetail.forkCount,
         )
         SoopHorizontalDivider(
             modifier = Modifier
@@ -90,6 +83,8 @@ fun SearchDetailScreen(
         )
         UserInfoContainer(
             modifier = Modifier.fillMaxWidth(),
+            userThumbnailUrl = uiState.userDetail.userThumbnailUrl,
+            userName = uiState.userDetail.userName,
             onClickUserDetail = onClickUserDetail,
         )
         SoopHorizontalDivider(
@@ -97,7 +92,23 @@ fun SearchDetailScreen(
                 .padding(vertical = 20.dp)
                 .fillMaxWidth(),
         )
-        DescContainer(modifier = Modifier.fillMaxWidth(), repoDesc = "This is description")
+        DescContainer(
+            modifier = Modifier.fillMaxWidth(),
+            repoDesc = uiState.repoDetail.description.orEmpty(),
+        )
+    }
+
+    if (uiState.isBottomSheetVisible) {
+        UserInfoBottomSheet(
+            modifier = Modifier.wrapContentSize(),
+            sheetState = sheetState,
+            userDetail = uiState.userDetail,
+            onTouchBottomSheetClose = onTouchBottomSheetClose,
+        )
+    }
+
+    if (uiState.isLoading) {
+        SoopLoadingCircular(modifier = Modifier.fillMaxSize())
     }
 }
 
@@ -108,12 +119,19 @@ private fun DescContainer(modifier: Modifier, repoDesc: String) {
         verticalArrangement = Arrangement.spacedBy(10.dp),
     ) {
         Text(text = stringResource(R.string.detail_description_title), fontWeight = FontWeight.Bold)
-        Text(text = repoDesc, color = Color.Gray)
+        if (repoDesc.isNotEmpty()) {
+            Text(text = repoDesc, color = Color.Gray)
+        }
     }
 }
 
 @Composable
-private fun UserInfoContainer(modifier: Modifier, onClickUserDetail: () -> Unit) {
+private fun UserInfoContainer(
+    modifier: Modifier,
+    onClickUserDetail: () -> Unit,
+    userThumbnailUrl: String,
+    userName: String,
+) {
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
@@ -121,8 +139,8 @@ private fun UserInfoContainer(modifier: Modifier, onClickUserDetail: () -> Unit)
     ) {
         SoopUserContainer(
             modifier = Modifier,
-            userName = "seoj17",
-            userThumbnailUrl = "https://avatars.githubusercontent.com/u/48755115?v=4",
+            userName = userName,
+            userThumbnailUrl = userThumbnailUrl,
             thumbnailSize = 40.dp,
         )
         Text(
@@ -151,7 +169,9 @@ private fun InfoBadgeContainer(
         horizontalArrangement = Arrangement.spacedBy(5.dp),
     ) {
         SoopTextBadge(modifier = Modifier, text = repoName, textSize = 12.sp)
-        SoopTextBadge(modifier = Modifier, text = repoLanguage, textSize = 12.sp)
+        if (repoLanguage.isNotEmpty()) {
+            SoopTextBadge(modifier = Modifier, text = repoLanguage, textSize = 12.sp)
+        }
         SoopTextBadge(modifier = Modifier, text = userName, textSize = 12.sp)
     }
 }
@@ -159,9 +179,9 @@ private fun InfoBadgeContainer(
 @Composable
 private fun RepoAttributesContainer(
     modifier: Modifier,
-    starCount: String,
-    watcherCount: String,
-    forkCount: String,
+    starCount: Int,
+    watcherCount: Int,
+    forkCount: Int,
 ) {
     Row(
         modifier = modifier,
@@ -171,17 +191,17 @@ private fun RepoAttributesContainer(
         RepoAttribute(
             modifier = Modifier,
             title = stringResource(R.string.detail_star_title),
-            content = starCount,
+            content = NumberFormater.format(starCount),
         )
         RepoAttribute(
             modifier = Modifier,
             title = stringResource(R.string.detail_watcher_title),
-            content = watcherCount,
+            content = NumberFormater.format(watcherCount),
         )
         RepoAttribute(
             modifier = Modifier,
             title = stringResource(R.string.detail_fork_title),
-            content = forkCount,
+            content = NumberFormater.format(forkCount),
         )
     }
 }
@@ -208,6 +228,7 @@ private fun UserInfoBottomSheet(
     modifier: Modifier,
     sheetState: SheetState,
     onTouchBottomSheetClose: () -> Unit,
+    userDetail: UserDetail,
 ) {
     ModalBottomSheet(
         modifier = modifier,
@@ -220,26 +241,26 @@ private fun UserInfoBottomSheet(
             modifier = Modifier
                 .padding(20.dp)
                 .wrapContentSize(),
+            userDetail = userDetail,
         )
     }
 }
 
 @Composable
-private fun BottomSheetContainer(modifier: Modifier) {
-    // TODO: Replace with real data
+private fun BottomSheetContainer(modifier: Modifier, userDetail: UserDetail) {
     val userInfoList = listOf(
-        Pair(R.string.sheet_followers_label, "100"),
-        Pair(R.string.sheet_following_label, "100"),
-        Pair(R.string.sheet_language_label, "100"),
-        Pair(R.string.sheet_repositories_label, "Kotlin"),
-        Pair(R.string.sheet_bio_label, "soop"),
+        Pair(R.string.sheet_followers_label, NumberFormater.format(userDetail.followerCount)),
+        Pair(R.string.sheet_following_label, NumberFormater.format(userDetail.followingCount)),
+        Pair(R.string.sheet_language_label, userDetail.usedLanguage),
+        Pair(R.string.sheet_repositories_label, NumberFormater.format(userDetail.repoCount)),
+        Pair(R.string.sheet_bio_label, userDetail.bio.orEmpty()),
     )
 
     Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(20.dp)) {
         SoopUserContainer(
             modifier = Modifier,
-            userName = "seoj17",
-            userThumbnailUrl = "https://avatars.githubusercontent.com/u/48755115?v=4",
+            userName = userDetail.userName,
+            userThumbnailUrl = userDetail.userThumbnailUrl,
             thumbnailSize = 40.dp,
             nameColor = Color.Black,
         )
@@ -265,10 +286,7 @@ private fun UserInfoContent(modifier: Modifier, titleResId: Int, content: String
 @Preview
 private fun SearchDetailScreenPreview() {
     SearchDetailScreen(
-        repoName = "soop",
-        repoLanguage = "Kotlin",
-        userName = "seoj17",
-        isBottomSheetVisible = true,
+        uiState = SearchDetailUiState.initialize(),
         onClickUserDetail = {},
         onTouchBottomSheetClose = {},
     )
