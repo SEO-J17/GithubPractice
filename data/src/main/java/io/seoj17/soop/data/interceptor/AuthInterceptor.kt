@@ -1,6 +1,5 @@
 package io.seoj17.soop.data.interceptor
 
-import dagger.Provides
 import okhttp3.Interceptor
 import okhttp3.Response
 import javax.inject.Inject
