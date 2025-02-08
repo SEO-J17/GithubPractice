@@ -11,6 +11,7 @@ import io.seoj17.soop.data.di.qualifier.RepoRetrofit
 import io.seoj17.soop.data.di.qualifier.TimeOutPolicy
 import io.seoj17.soop.data.interceptor.AuthInterceptor
 import io.seoj17.soop.data.service.GithubRepoService
+import io.seoj17.soop.data.service.UserService
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
@@ -102,4 +103,10 @@ object NetworkModule {
     fun provideLoginService(
         @RepoRetrofit retrofit: Retrofit,
     ): GithubRepoService = retrofit.create()
+
+    @Singleton
+    @Provides
+    fun provideUserServices(
+        @RepoRetrofit retrofit: Retrofit,
+    ): UserService = retrofit.create()
 }
