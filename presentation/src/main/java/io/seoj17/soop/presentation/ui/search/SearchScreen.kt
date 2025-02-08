@@ -22,17 +22,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import io.seoj17.soop.presentation.component.SoopLoadingCircular
 import io.seoj17.soop.presentation.component.SoopMainLanguage
 import io.seoj17.soop.presentation.component.SoopStar
 import io.seoj17.soop.presentation.component.SoopUserContainer
 import io.seoj17.soop.presentation.ui.search.component.SearchTextField
+import io.seoj17.soop.presentation.ui.search.model.RepoInfo
+import io.seoj17.soop.presentation.ui.search.mvi.SearchUiState
 import io.seoj17.soop.presentation.utils.ImmutableList
+import io.seoj17.soop.presentation.utils.NumberFormater
 import io.seoj17.soop.presentation.utils.noRippleClick
 import io.seoj17.soop.presentation.utils.noRippleSingleClick
 
 @Composable
 fun SearchScreen(
-    repoList: ImmutableList<Any>,
+    uiState: SearchUiState,
     onClickSearch: (String) -> Unit,
     onClickSearchResultItem: () -> Unit,
 ) {
@@ -41,22 +45,26 @@ fun SearchScreen(
             modifier = Modifier.fillMaxWidth(),
             onClickSearch = onClickSearch,
         )
-        SearchResultContainer(
-            modifier = Modifier.fillMaxSize(),
-            repoList = repoList,
-            onClickSearchResultItem = onClickSearchResultItem,
-        )
+        if (uiState.isLoading) {
+            SoopLoadingCircular(modifier = Modifier.fillMaxSize())
+        } else {
+            SearchResultContainer(
+                modifier = Modifier.fillMaxSize(),
+                repoList = uiState.repoList,
+                onClickSearchResultItem = onClickSearchResultItem,
+            )
+        }
     }
 }
 
 @Composable
 private fun SearchResultContainer(
     modifier: Modifier,
-    repoList: ImmutableList<Any>,
+    repoList: ImmutableList<RepoInfo>,
     onClickSearchResultItem: () -> Unit,
 ) {
     LazyColumn(modifier = modifier) {
-        itemsIndexed(repoList) { index, item ->
+        itemsIndexed(repoList) { index, repoInfo ->
             RepoInfoItem(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -67,7 +75,7 @@ private fun SearchResultContainer(
                         top = if (index == 0) 20.dp else 13.dp,
                         bottom = if (index == repoList.lastIndex) 20.dp else 0.dp,
                     ),
-                repoInfo = item,
+                repoInfo = repoInfo,
             )
             if (index != repoList.lastIndex) {
                 HorizontalDivider(
@@ -83,21 +91,23 @@ private fun SearchResultContainer(
 }
 
 @Composable
-private fun RepoInfoItem(modifier: Modifier, repoInfo: Any) {
+private fun RepoInfoItem(modifier: Modifier, repoInfo: RepoInfo) {
     Column(modifier = modifier) {
-        // TODO: RepoInfoItem 구현
         SoopUserContainer(
             modifier = Modifier.wrapContentSize(),
-            userThumbnailUrl = "https://avatars.githubusercontent.com/u/1?v=4",
-            userName = "seoj17",
+            userThumbnailUrl = repoInfo.userThumbnailUrl,
+            userName = repoInfo.userName,
         )
-        Text(modifier = Modifier.padding(top = 5.dp), text = "RepoName")
-        Text(modifier = Modifier.padding(top = 10.dp), text = "RepoDescription")
+        Text(modifier = Modifier.padding(top = 5.dp), text = repoInfo.repoName)
+        repoInfo.repoDescription?.let { description ->
+            Text(modifier = Modifier.padding(top = 5.dp), text = description)
+        }
         RepoPropertyContainer(
             modifier = Modifier
                 .wrapContentSize()
                 .padding(top = 10.dp),
-            repoProperty = repoInfo,
+            starCount = repoInfo.starCount,
+            mainLanguage = repoInfo.usedLanguage,
         )
     }
 }
@@ -124,7 +134,7 @@ private fun SearchContainer(modifier: Modifier, onClickSearch: (String) -> Unit)
 }
 
 @Composable
-private fun RepoPropertyContainer(modifier: Modifier, repoProperty: Any) {
+private fun RepoPropertyContainer(modifier: Modifier, starCount: Int, mainLanguage: String?) {
     Row(
         modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(15.dp),
@@ -132,11 +142,11 @@ private fun RepoPropertyContainer(modifier: Modifier, repoProperty: Any) {
     ) {
         SoopStar(
             modifier = Modifier.wrapContentSize(),
-            text = "14.5k",
+            text = NumberFormater.starCount(starCount),
         )
         SoopMainLanguage(
             modifier = Modifier.wrapContentSize(),
-            text = "Kotlin",
+            text = mainLanguage.orEmpty(),
         )
     }
 }
@@ -146,22 +156,21 @@ private fun RepoPropertyContainer(modifier: Modifier, repoProperty: Any) {
 private fun SearchScreenPreview() {
     SearchScreen(
         onClickSearch = {},
-        repoList = ImmutableList(
-            listOf(
-                Any(),
-                Any(),
-                Any(),
-                Any(),
-                Any(),
-                Any(),
-                Any(),
-                Any(),
-                Any(),
-                Any(),
-                Any(),
-                Any(),
+        onClickSearchResultItem = {},
+        uiState = SearchUiState(
+            isLoading = false,
+            repoList = ImmutableList(
+                listOf(
+                    RepoInfo(
+                        userThumbnailUrl = "https://avatars.githubusercontent.com/u/1?v=4",
+                        userName = "mojombo",
+                        repoName = "grit",
+                        repoDescription = "Grit is no longer maintained. Check out libgit2/rugged.",
+                        starCount = 1825,
+                        usedLanguage = "Ruby",
+                    ),
+                ),
             ),
         ),
-        onClickSearchResultItem = {},
     )
 }
