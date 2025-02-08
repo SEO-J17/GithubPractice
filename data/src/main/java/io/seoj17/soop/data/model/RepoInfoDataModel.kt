@@ -5,6 +5,7 @@ import io.seoj17.soop.data.response.RepoInfoResponse
 data class RepoInfoDataModel(
     val userThumbnailUrl: String,
     val userName: String,
+    val repoName: String,
     val repoDescription: String?,
     val starCount: Int,
     val usedLanguage: String?,
@@ -14,6 +15,7 @@ fun RepoInfoResponse.toDataModel(): RepoInfoDataModel {
     return RepoInfoDataModel(
         userThumbnailUrl = owner.avatarUrl,
         userName = owner.login,
+        repoName = name,
         repoDescription = description,
         starCount = stargazersCount,
         usedLanguage = language,
