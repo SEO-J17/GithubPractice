@@ -33,7 +33,12 @@ class SearchViewModel @Inject constructor(
             }
 
             is SearchIntent.ClickSearchResultItem -> {
-                postSideEffect(SearchSideEffect.NavigateToSearchDetail)
+                postSideEffect(
+                    SearchSideEffect.NavigateToSearchDetail(
+                        userName = intent.userName,
+                        repoName = intent.repoName,
+                    ),
+                )
             }
         }
     }

@@ -23,7 +23,7 @@ fun SoopTextBadge(
         modifier = modifier
             .clip(RoundedCornerShape(20.dp))
             .background(color = Color.LightGray)
-            .padding(horizontal = 8.dp, vertical = 4.dp),
+            .padding(horizontal = 8.dp, vertical = 2.dp),
         text = text,
         color = Color.Gray,
         fontSize = textSize,

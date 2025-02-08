@@ -11,7 +11,7 @@ fun NavController.navigateToSearch() {
     )
 }
 
-fun NavGraphBuilder.searchNavigation(onClickSearchResultItem: () -> Unit) {
+fun NavGraphBuilder.searchNavigation(onClickSearchResultItem: (String, String) -> Unit) {
     composable(route = SoopRoute.Search.route) {
         SearchRoute(onClickSearchResultItem = onClickSearchResultItem)
     }

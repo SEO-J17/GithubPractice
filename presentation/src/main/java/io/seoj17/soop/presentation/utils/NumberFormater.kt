@@ -3,7 +3,7 @@ package io.seoj17.soop.presentation.utils
 import java.util.Locale
 
 object NumberFormater {
-    fun starCount(num: Int): String {
+    fun format(num: Int): String {
         return when {
             num < 1_000 -> {
                 num.toString()

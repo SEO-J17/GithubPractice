@@ -5,6 +5,8 @@ sealed interface SoopRoute {
 
     data object Search : SoopRoute {
         override val route: String = "search"
+        const val KEY_USER_NAME = "userName"
+        const val KEY_REPO_NAME = "repoName"
     }
 
     data object SearchDetail : SoopRoute {

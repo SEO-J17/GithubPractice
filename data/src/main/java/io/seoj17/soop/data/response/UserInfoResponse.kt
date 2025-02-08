@@ -12,7 +12,7 @@ data class UserInfoResponse(
     @SerialName("blog")
     val blog: String,
     @SerialName("company")
-    val company: String,
+    val company: String?,
     @SerialName("created_at")
     val createdAt: String,
     @SerialName("email")

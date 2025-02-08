@@ -38,7 +38,7 @@ import io.seoj17.soop.presentation.utils.noRippleSingleClick
 fun SearchScreen(
     uiState: SearchUiState,
     onClickSearch: (String) -> Unit,
-    onClickSearchResultItem: () -> Unit,
+    onClickSearchResultItem: (String, String) -> Unit,
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
         SearchContainer(
@@ -61,14 +61,14 @@ fun SearchScreen(
 private fun SearchResultContainer(
     modifier: Modifier,
     repoList: ImmutableList<RepoInfo>,
-    onClickSearchResultItem: () -> Unit,
+    onClickSearchResultItem: (String, String) -> Unit,
 ) {
     LazyColumn(modifier = modifier) {
         itemsIndexed(repoList) { index, repoInfo ->
             RepoInfoItem(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .noRippleClick { onClickSearchResultItem() }
+                    .noRippleClick { onClickSearchResultItem(repoInfo.userName, repoInfo.repoName) }
                     .padding(
                         start = 20.dp,
                         end = 20.dp,
@@ -142,7 +142,7 @@ private fun RepoPropertyContainer(modifier: Modifier, starCount: Int, mainLangua
     ) {
         SoopStar(
             modifier = Modifier.wrapContentSize(),
-            text = NumberFormater.starCount(starCount),
+            text = NumberFormater.format(starCount),
         )
         SoopMainLanguage(
             modifier = Modifier.wrapContentSize(),
@@ -156,7 +156,7 @@ private fun RepoPropertyContainer(modifier: Modifier, starCount: Int, mainLangua
 private fun SearchScreenPreview() {
     SearchScreen(
         onClickSearch = {},
-        onClickSearchResultItem = {},
+        onClickSearchResultItem = { _, _ -> },
         uiState = SearchUiState(
             isLoading = false,
             repoList = ImmutableList(
