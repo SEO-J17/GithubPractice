@@ -20,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -45,11 +46,17 @@ fun SearchScreen(
     onClickSearch: (String) -> Unit,
     onClickSearchResultItem: (String, String) -> Unit,
     onDataLoading: (Boolean) -> Unit,
+    onDataLoadError: (Throwable) -> Unit,
 ) {
     val repoPagingData = uiState.repoPagingData.collectAsLazyPagingItems()
 
     if (repoPagingData.itemCount != 0) {
         onDataLoading(false)
+    }
+
+    if (repoPagingData.loadState.hasError && uiState.isLoading) {
+        val errorState = repoPagingData.loadState.refresh as LoadState.Error
+        onDataLoadError(errorState.error)
     }
 
     Column(modifier = Modifier.fillMaxSize()) {
@@ -144,17 +151,23 @@ private fun RepoInfoItem(modifier: Modifier, repoInfo: RepoInfo) {
 @Composable
 private fun SearchContainer(modifier: Modifier, onClickSearch: (String) -> Unit) {
     val searchTextState = rememberTextFieldState()
+    val focusManager = LocalFocusManager.current
 
     Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically) {
         SearchTextField(
-            modifier = Modifier.weight(9f),
+            modifier = Modifier.weight(7f),
             textFieldState = searchTextState,
             textHint = stringResource(R.string.search_hint),
+            onClickConfirm = { onClickSearch(searchTextState.text.toString()) },
         )
         Icon(
             modifier = Modifier
-                .noRippleSingleClick { onClickSearch(searchTextState.text.toString()) }
-                .size(30.dp)
+                .noRippleSingleClick {
+                    focusManager.clearFocus()
+                    onClickSearch(searchTextState.text.toString())
+                }
+                .padding(10.dp)
+                .size(40.dp)
                 .weight(1f),
             imageVector = Icons.Default.Search,
             contentDescription = stringResource(R.string.search_desc),
@@ -191,5 +204,6 @@ private fun SearchScreenPreview() {
             repoPagingData = emptyFlow(),
         ),
         onDataLoading = {},
+        onDataLoadError = {},
     )
 }
