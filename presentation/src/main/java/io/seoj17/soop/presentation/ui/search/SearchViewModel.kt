@@ -2,18 +2,20 @@ package io.seoj17.soop.presentation.ui.search
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
+import androidx.paging.map
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.seoj17.soop.domain.usecase.GetRepoListUseCase
 import io.seoj17.soop.presentation.base.BaseViewModel
+import io.seoj17.soop.presentation.ui.search.model.RepoInfo
 import io.seoj17.soop.presentation.ui.search.model.toUiModel
 import io.seoj17.soop.presentation.ui.search.mvi.SearchIntent
 import io.seoj17.soop.presentation.ui.search.mvi.SearchSideEffect
 import io.seoj17.soop.presentation.ui.search.mvi.SearchUiState
-import io.seoj17.soop.presentation.utils.ImmutableList
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onCompletion
-import kotlinx.coroutines.flow.onStart
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -40,6 +42,10 @@ class SearchViewModel @Inject constructor(
                     ),
                 )
             }
+
+            is SearchIntent.LoadData -> {
+                updateLoading(intent.isLoading)
+            }
         }
     }
 
@@ -50,16 +56,20 @@ class SearchViewModel @Inject constructor(
     }
 
     private fun getRepoList(repoName: String) {
-        viewModelScope.launch {
-            getRepoListUseCase(repoName)
-                .onStart { updateLoading(true) }
-                .onCompletion { updateLoading(false) }
-                .map { it.toUiModel() }
-                .collect { repoList ->
-                    reduce {
-                        copy(repoList = ImmutableList(repoList))
-                    }
+        val flowPaging = getRepoListUseCase(repoName)
+            .map { pagingData ->
+                pagingData.map {
+                    it.toUiModel()
                 }
+            }
+            .distinctUntilChanged()
+            .cachedIn(viewModelScope)
+        updateSearchResult(flowPaging)
+    }
+
+    private fun updateSearchResult(searchResult: Flow<PagingData<RepoInfo>>) {
+        reduce {
+            copy(repoPagingData = searchResult)
         }
     }
 }
