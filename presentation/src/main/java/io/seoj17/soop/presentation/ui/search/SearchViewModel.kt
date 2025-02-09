@@ -24,7 +24,7 @@ class SearchViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val getRepoListUseCase: GetRepoListUseCase,
 
-) : BaseViewModel<SearchUiState, SearchSideEffect, SearchIntent>(savedStateHandle) {
+    ) : BaseViewModel<SearchUiState, SearchSideEffect, SearchIntent>(savedStateHandle) {
     override fun createInitialState(savedStateHandle: SavedStateHandle): SearchUiState {
         return SearchUiState.initialize()
     }
@@ -67,6 +67,7 @@ class SearchViewModel @Inject constructor(
             .cachedIn(viewModelScope)
             .catch {
                 postSideEffect(SearchSideEffect.ShowError)
+                updateLoading(false)
             }
         updateSearchResult(flowPaging)
     }
