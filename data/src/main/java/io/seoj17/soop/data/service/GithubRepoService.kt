@@ -10,6 +10,8 @@ interface GithubRepoService {
     @GET("search/repositories")
     suspend fun getRepoList(
         @Query(value = "q") repoName: String,
+        @Query(value = "page") page: Int,
+        @Query(value = "per_page") perPage: Int,
     ): GithubRepoResponse
 
     @GET("repos/{owner}/{repo}")
