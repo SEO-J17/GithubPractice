@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -34,17 +33,12 @@ import io.seoj17.soop.presentation.ui.detail.mvi.SearchDetailUiState
 import io.seoj17.soop.presentation.utils.NumberFormater
 import io.seoj17.soop.presentation.utils.rippleClick
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchDetailScreen(
     uiState: SearchDetailUiState,
     onClickUserDetail: () -> Unit,
     onTouchBottomSheetClose: () -> Unit,
 ) {
-    val sheetState = rememberModalBottomSheetState(
-        skipPartiallyExpanded = true,
-    )
-
     Column(
         modifier = Modifier
             .background(Color.White)
@@ -101,7 +95,6 @@ fun SearchDetailScreen(
     if (uiState.isBottomSheetVisible) {
         UserInfoBottomSheet(
             modifier = Modifier.wrapContentSize(),
-            sheetState = sheetState,
             userDetail = uiState.userDetail,
             onTouchBottomSheetClose = onTouchBottomSheetClose,
         )
@@ -128,9 +121,9 @@ private fun DescContainer(modifier: Modifier, repoDesc: String) {
 @Composable
 private fun UserInfoContainer(
     modifier: Modifier,
-    onClickUserDetail: () -> Unit,
     userThumbnailUrl: String,
     userName: String,
+    onClickUserDetail: () -> Unit,
 ) {
     Row(
         modifier = modifier,
@@ -226,10 +219,13 @@ private fun RepoAttribute(
 @Composable
 private fun UserInfoBottomSheet(
     modifier: Modifier,
-    sheetState: SheetState,
     onTouchBottomSheetClose: () -> Unit,
     userDetail: UserDetail,
 ) {
+    val sheetState = rememberModalBottomSheetState(
+        skipPartiallyExpanded = true,
+    )
+
     ModalBottomSheet(
         modifier = modifier,
         onDismissRequest = { onTouchBottomSheetClose() },
