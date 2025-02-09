@@ -13,7 +13,7 @@ fun NavController.navigateToSearchDetail(userName: String, repoName: String) {
     navigate("${SoopRoute.SearchDetail.route}/$userName/$repoName")
 }
 
-fun NavGraphBuilder.searchDetailNavigation() {
+fun NavGraphBuilder.searchDetailNavigation(onBackPreviousScreen: () -> Unit) {
     composable(
         route = "${SoopRoute.SearchDetail.route}/{$KEY_USER_NAME}/{$KEY_REPO_NAME}",
         arguments = listOf(
@@ -21,6 +21,6 @@ fun NavGraphBuilder.searchDetailNavigation() {
             navArgument(KEY_REPO_NAME) { type = NavType.StringType },
         ),
     ) {
-        SearchDetailRoute()
+        SearchDetailRoute(onBackPreviousScreen = onBackPreviousScreen)
     }
 }

@@ -7,10 +7,13 @@ import io.seoj17.soop.domain.usecase.GetUserDetailUseCase
 import io.seoj17.soop.domain.usecase.GetUserRepoDetailUseCase
 import io.seoj17.soop.presentation.base.BaseViewModel
 import io.seoj17.soop.presentation.navigation.SoopRoute
+import io.seoj17.soop.presentation.ui.detail.model.RepoDetail
+import io.seoj17.soop.presentation.ui.detail.model.UserDetail
 import io.seoj17.soop.presentation.ui.detail.model.toUiModel
 import io.seoj17.soop.presentation.ui.detail.mvi.SearchDetailIntent
 import io.seoj17.soop.presentation.ui.detail.mvi.SearchDetailSideEffect
 import io.seoj17.soop.presentation.ui.detail.mvi.SearchDetailUiState
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onStart
@@ -23,6 +26,7 @@ class SearchDetailViewModel @Inject constructor(
     private val getUserRepoDetailUseCase: GetUserRepoDetailUseCase,
     private val getUserDetailUseCase: GetUserDetailUseCase,
 ) : BaseViewModel<SearchDetailUiState, SearchDetailSideEffect, SearchDetailIntent>(savedStateHandle) {
+
     private val userName = savedStateHandle.get<String>(SoopRoute.Search.KEY_USER_NAME)
     private val repoName = savedStateHandle.get<String>(SoopRoute.Search.KEY_REPO_NAME)
 
@@ -62,13 +66,21 @@ class SearchDetailViewModel @Inject constructor(
     private fun getRepoDetail(userName: String?, repoName: String?) {
         updateLoading(true)
         viewModelScope.launch {
-            val repoDetail = getUserRepoDetailUseCase(
+            getUserRepoDetailUseCase(
                 userName = userName.orEmpty(),
                 repoName = repoName.orEmpty(),
             )
-            reduce {
-                copy(repoDetail = repoDetail.toUiModel())
-            }
+                .onSuccess { updateRepoDetail(it.toUiModel()) }
+                .onFailure {
+                    postSideEffect(SearchDetailSideEffect.ShowError)
+                    postSideEffect(SearchDetailSideEffect.BackPreviousScreen)
+                }
+        }
+    }
+
+    private fun updateRepoDetail(repoDetail: RepoDetail) {
+        reduce {
+            copy(repoDetail = repoDetail)
         }
     }
 
@@ -84,11 +96,19 @@ class SearchDetailViewModel @Inject constructor(
                 .map {
                     it.toUiModel()
                 }
-                .collect { userDetailUiModel ->
-                    reduce {
-                        copy(userDetail = userDetailUiModel)
-                    }
+                .catch {
+                    postSideEffect(SearchDetailSideEffect.ShowError)
+                    postSideEffect(SearchDetailSideEffect.BackPreviousScreen)
                 }
+                .collect { userDetailUiModel ->
+                    updateUserDetail(userDetailUiModel)
+                }
+        }
+    }
+
+    private fun updateUserDetail(userDetail: UserDetail) {
+        reduce {
+            copy(userDetail = userDetail)
         }
     }
 }

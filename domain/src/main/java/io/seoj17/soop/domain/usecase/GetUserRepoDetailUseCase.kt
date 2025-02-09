@@ -10,7 +10,7 @@ import javax.inject.Inject
 class GetUserRepoDetailUseCase @Inject constructor(
     private val repoRepository: RepoRepository,
 ) {
-    suspend operator fun invoke(userName: String, repoName: String): RepoDetailDomainModel {
-        return repoRepository.getRepoDetail(userName, repoName).toDomainModel()
+    suspend operator fun invoke(userName: String, repoName: String): Result<RepoDetailDomainModel> {
+        return runCatching { repoRepository.getRepoDetail(userName, repoName).toDomainModel() }
     }
 }

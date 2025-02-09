@@ -14,6 +14,7 @@ import io.seoj17.soop.presentation.ui.search.mvi.SearchIntent
 import io.seoj17.soop.presentation.ui.search.mvi.SearchSideEffect
 import io.seoj17.soop.presentation.ui.search.mvi.SearchUiState
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -23,7 +24,7 @@ class SearchViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val getRepoListUseCase: GetRepoListUseCase,
 
-) : BaseViewModel<SearchUiState, SearchSideEffect, SearchIntent>(savedStateHandle) {
+    ) : BaseViewModel<SearchUiState, SearchSideEffect, SearchIntent>(savedStateHandle) {
     override fun createInitialState(savedStateHandle: SavedStateHandle): SearchUiState {
         return SearchUiState.initialize()
     }
@@ -64,6 +65,10 @@ class SearchViewModel @Inject constructor(
             }
             .distinctUntilChanged()
             .cachedIn(viewModelScope)
+            .catch {
+                postSideEffect(SearchSideEffect.ShowError)
+                updateLoading(false)
+            }
         updateSearchResult(flowPaging)
     }
 
