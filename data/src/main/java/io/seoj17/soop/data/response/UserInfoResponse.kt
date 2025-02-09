@@ -42,7 +42,7 @@ data class UserInfoResponse(
     @SerialName("login")
     val login: String,
     @SerialName("name")
-    val name: String,
+    val name: String?,
     @SerialName("node_id")
     val nodeId: String,
     @SerialName("organizations_url")
