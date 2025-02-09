@@ -54,7 +54,7 @@ data class RepoInfoResponse(
     @SerialName("forks_url")
     val forksUrl: String,
     @SerialName("full_name")
-    val fullName: String,
+    val fullName: String?,
     @SerialName("git_commits_url")
     val gitCommitsUrl: String,
     @SerialName("git_refs_url")
@@ -124,7 +124,7 @@ data class RepoInfoResponse(
     @SerialName("pulls_url")
     val pullsUrl: String,
     @SerialName("pushed_at")
-    val pushedAt: String,
+    val pushedAt: String?,
     @SerialName("releases_url")
     val releasesUrl: String,
     @SerialName("score")
