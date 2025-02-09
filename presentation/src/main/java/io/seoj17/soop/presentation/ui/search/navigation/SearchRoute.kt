@@ -28,8 +28,8 @@ fun SearchRoute(
                     sideEffect.userName,
                     sideEffect.repoName,
                 )
-
-                SearchSideEffect.ShowError -> context.showToast(R.string.error_message)
+                is SearchSideEffect.ShowError -> context.showToast(R.string.error_message)
+                is SearchSideEffect.ShowEmptySearchResult -> context.showToast(R.string.no_search_result)
             }
         }
     }
@@ -49,6 +49,9 @@ fun SearchRoute(
         },
         onDataLoading = { isLoading ->
             viewModel.handleIntent(SearchIntent.LoadData(isLoading))
+        },
+        onDataLoadError = { throwable ->
+            viewModel.handleIntent(SearchIntent.LoadDataError(throwable))
         },
     )
 }

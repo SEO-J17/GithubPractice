@@ -21,7 +21,3 @@ fun RepoInfoDomainModel.toUiModel(): RepoInfo {
         usedLanguage = usedLanguage,
     )
 }
-
-fun List<RepoInfoDomainModel>.toUiModel(): List<RepoInfo> {
-    return map { it.toUiModel() }
-}

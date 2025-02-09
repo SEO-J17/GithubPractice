@@ -17,6 +17,11 @@ class RepoPagingSource(
                 page = page,
                 perPage = params.loadSize,
             )
+
+            if (repoInfoList.isEmpty()) {
+                throw NoSuchElementException()
+            }
+
             LoadResult.Page(
                 data = repoInfoList,
                 prevKey = if (page == START_PAGE) null else page - 1,
