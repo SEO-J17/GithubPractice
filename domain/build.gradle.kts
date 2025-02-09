@@ -10,4 +10,5 @@ android {
 dependencies {
     implementation(project(":data"))
     implementation(libs.bundles.coroutine)
+    implementation(libs.androidx.paging.common)
 }

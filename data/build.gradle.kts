@@ -10,4 +10,6 @@ android {
 dependencies {
     implementation(libs.bundles.coroutine)
     implementation(libs.bundles.network)
+    // compose paging
+    implementation(libs.androidx.paging.compose)
 }
