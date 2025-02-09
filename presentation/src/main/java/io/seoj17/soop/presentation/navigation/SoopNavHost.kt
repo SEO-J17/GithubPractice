@@ -29,6 +29,8 @@ fun SoopNavHost(
                 navController.navigateToSearchDetail(userName = userName, repoName = repoName)
             },
         )
-        searchDetailNavigation()
+        searchDetailNavigation(
+            onBackPreviousScreen = { navController.popBackStack() },
+        )
     }
 }
