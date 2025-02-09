@@ -23,8 +23,7 @@ import javax.inject.Inject
 class SearchViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val getRepoListUseCase: GetRepoListUseCase,
-
-    ) : BaseViewModel<SearchUiState, SearchSideEffect, SearchIntent>(savedStateHandle) {
+) : BaseViewModel<SearchUiState, SearchSideEffect, SearchIntent>(savedStateHandle) {
     override fun createInitialState(savedStateHandle: SavedStateHandle): SearchUiState {
         return SearchUiState.initialize()
     }
@@ -46,6 +45,15 @@ class SearchViewModel @Inject constructor(
 
             is SearchIntent.LoadData -> {
                 updateLoading(intent.isLoading)
+            }
+
+            is SearchIntent.LoadDataError -> {
+                if (intent.errorType is NoSuchElementException) {
+                    postSideEffect(SearchSideEffect.ShowEmptySearchResult)
+                } else {
+                    postSideEffect(SearchSideEffect.ShowError)
+                }
+                updateLoading(false)
             }
         }
     }
