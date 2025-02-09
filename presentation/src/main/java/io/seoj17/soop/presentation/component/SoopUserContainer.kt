@@ -11,10 +11,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import io.seoj17.soop.presentation.R
 
 @Composable
 fun SoopUserContainer(
@@ -35,7 +37,7 @@ fun SoopUserContainer(
                 .size(thumbnailSize),
             model = userThumbnailUrl,
             contentScale = ContentScale.Fit,
-            contentDescription = "유저 썸네일",
+            contentDescription = stringResource(R.string.user_thumbnail),
         )
         Text(
             text = userName,
