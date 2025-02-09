@@ -19,7 +19,7 @@ class RepoPagingSource(
             )
 
             if (repoInfoList.isEmpty()) {
-                 throw NoSuchElementException()
+                throw NoSuchElementException()
             }
 
             LoadResult.Page(
