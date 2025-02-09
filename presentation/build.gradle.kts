@@ -25,4 +25,6 @@ dependencies {
     implementation(libs.navigation.compose)
     // compose coil
     implementation(libs.coil.compose)
+    // compose paging
+    implementation(libs.androidx.paging.compose)
 }

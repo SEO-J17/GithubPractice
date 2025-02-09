@@ -1,6 +1,5 @@
 package io.seoj17.soop.presentation.ui.detail
 
-import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -25,7 +24,7 @@ class SearchDetailViewModel @Inject constructor(
     private val getUserDetailUseCase: GetUserDetailUseCase,
 ) : BaseViewModel<SearchDetailUiState, SearchDetailSideEffect, SearchDetailIntent>(savedStateHandle) {
     private val userName = savedStateHandle.get<String>(SoopRoute.Search.KEY_USER_NAME)
-    private val repoName = savedStateHandle.get<String>(SoopRoute.Search.KEY_USER_NAME)
+    private val repoName = savedStateHandle.get<String>(SoopRoute.Search.KEY_REPO_NAME)
 
     init {
         getRepoDetail(userName, repoName)

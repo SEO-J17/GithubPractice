@@ -12,8 +12,12 @@ class RepoDataSourceImpl @Inject constructor(
     private val githubRepoService: GithubRepoService,
     private val userService: UserService,
 ) : RepoDataSource {
-    override suspend fun getRepoList(repoName: String): List<RepoInfoDataModel> {
-        return githubRepoService.getRepoList(repoName).items.toDataModel()
+    override suspend fun getRepoList(
+        repoName: String,
+        page: Int,
+        perPage: Int,
+    ): List<RepoInfoDataModel> {
+        return githubRepoService.getRepoList(repoName, page, perPage).items.toDataModel()
     }
 
     override suspend fun getRepoDetail(userName: String, repoName: String): RepoDetailDataModel {

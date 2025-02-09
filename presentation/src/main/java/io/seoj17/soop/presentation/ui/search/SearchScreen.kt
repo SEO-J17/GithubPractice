@@ -1,5 +1,6 @@
 package io.seoj17.soop.presentation.ui.search
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -9,7 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
@@ -20,8 +20,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.paging.LoadState
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
+import io.seoj17.soop.presentation.R
 import io.seoj17.soop.presentation.component.SoopLoadingCircular
 import io.seoj17.soop.presentation.component.SoopMainLanguage
 import io.seoj17.soop.presentation.component.SoopStar
@@ -29,28 +34,40 @@ import io.seoj17.soop.presentation.component.SoopUserContainer
 import io.seoj17.soop.presentation.ui.search.component.SearchTextField
 import io.seoj17.soop.presentation.ui.search.model.RepoInfo
 import io.seoj17.soop.presentation.ui.search.mvi.SearchUiState
-import io.seoj17.soop.presentation.utils.ImmutableList
 import io.seoj17.soop.presentation.utils.NumberFormater
 import io.seoj17.soop.presentation.utils.noRippleClick
 import io.seoj17.soop.presentation.utils.noRippleSingleClick
+import kotlinx.coroutines.flow.emptyFlow
 
 @Composable
 fun SearchScreen(
     uiState: SearchUiState,
     onClickSearch: (String) -> Unit,
     onClickSearchResultItem: (String, String) -> Unit,
+    onDataLoading: (Boolean) -> Unit,
 ) {
+    val repoPagingData = uiState.repoPagingData.collectAsLazyPagingItems()
+
+    if (repoPagingData.itemCount != 0) {
+        onDataLoading(false)
+    }
+
     Column(modifier = Modifier.fillMaxSize()) {
         SearchContainer(
             modifier = Modifier.fillMaxWidth(),
-            onClickSearch = onClickSearch,
+            onClickSearch = { searchText ->
+                onDataLoading(true)
+                onClickSearch(searchText)
+            },
         )
         if (uiState.isLoading) {
             SoopLoadingCircular(modifier = Modifier.fillMaxSize())
         } else {
             SearchResultContainer(
-                modifier = Modifier.fillMaxSize(),
-                repoList = uiState.repoList,
+                modifier = Modifier
+                    .background(Color.White)
+                    .fillMaxSize(),
+                repoPagingData = repoPagingData,
                 onClickSearchResultItem = onClickSearchResultItem,
             )
         }
@@ -60,30 +77,42 @@ fun SearchScreen(
 @Composable
 private fun SearchResultContainer(
     modifier: Modifier,
-    repoList: ImmutableList<RepoInfo>,
+    repoPagingData: LazyPagingItems<RepoInfo>,
     onClickSearchResultItem: (String, String) -> Unit,
 ) {
     LazyColumn(modifier = modifier) {
-        itemsIndexed(repoList) { index, repoInfo ->
+        items(repoPagingData.itemCount) { index ->
+            val repoInfo = repoPagingData[index] ?: return@items
+
             RepoInfoItem(
                 modifier = Modifier
+                    .background(Color.White)
                     .fillMaxWidth()
                     .noRippleClick { onClickSearchResultItem(repoInfo.userName, repoInfo.repoName) }
                     .padding(
                         start = 20.dp,
                         end = 20.dp,
                         top = if (index == 0) 20.dp else 13.dp,
-                        bottom = if (index == repoList.lastIndex) 20.dp else 0.dp,
+                        bottom = if (index == repoPagingData.itemCount - 1) 20.dp else 0.dp,
                     ),
                 repoInfo = repoInfo,
             )
-            if (index != repoList.lastIndex) {
+            if (index != repoPagingData.itemCount - 1) {
                 HorizontalDivider(
                     modifier = Modifier
                         .padding(top = 13.dp)
                         .fillMaxWidth(),
                     color = Color.LightGray,
                     thickness = 1.dp,
+                )
+            }
+        }
+        item {
+            if (repoPagingData.loadState.append == LoadState.Loading) {
+                SoopLoadingCircular(
+                    modifier = Modifier
+                        .padding(vertical = 20.dp)
+                        .fillMaxWidth(),
                 )
             }
         }
@@ -120,7 +149,7 @@ private fun SearchContainer(modifier: Modifier, onClickSearch: (String) -> Unit)
         SearchTextField(
             modifier = Modifier.weight(9f),
             textFieldState = searchTextState,
-            textHint = "검색어를 입력해주세요",
+            textHint = stringResource(R.string.search_hint),
         )
         Icon(
             modifier = Modifier
@@ -128,7 +157,7 @@ private fun SearchContainer(modifier: Modifier, onClickSearch: (String) -> Unit)
                 .size(30.dp)
                 .weight(1f),
             imageVector = Icons.Default.Search,
-            contentDescription = "검색",
+            contentDescription = stringResource(R.string.search_desc),
         )
     }
 }
@@ -159,18 +188,8 @@ private fun SearchScreenPreview() {
         onClickSearchResultItem = { _, _ -> },
         uiState = SearchUiState(
             isLoading = false,
-            repoList = ImmutableList(
-                listOf(
-                    RepoInfo(
-                        userThumbnailUrl = "https://avatars.githubusercontent.com/u/1?v=4",
-                        userName = "mojombo",
-                        repoName = "grit",
-                        repoDescription = "Grit is no longer maintained. Check out libgit2/rugged.",
-                        starCount = 1825,
-                        usedLanguage = "Ruby",
-                    ),
-                ),
-            ),
+            repoPagingData = emptyFlow(),
         ),
+        onDataLoading = {},
     )
 }

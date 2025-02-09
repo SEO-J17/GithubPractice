@@ -41,5 +41,8 @@ fun SearchRoute(
                 ),
             )
         },
+        onDataLoading = { isLoading ->
+            viewModel.handleIntent(SearchIntent.LoadData(isLoading))
+        },
     )
 }
