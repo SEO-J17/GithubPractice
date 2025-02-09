@@ -11,8 +11,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import io.seoj17.soop.presentation.R
 
 @Composable
 fun SoopStar(modifier: Modifier, text: String) {
@@ -24,7 +26,7 @@ fun SoopStar(modifier: Modifier, text: String) {
         Icon(
             modifier = Modifier.size(15.dp),
             imageVector = Icons.Default.Star,
-            contentDescription = "star 개수",
+            contentDescription = stringResource(R.string.start_num),
             tint = Color.Yellow,
         )
         Text(
